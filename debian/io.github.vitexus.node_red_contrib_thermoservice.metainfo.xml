@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="addon">
+  <id>io.github.vitexus.node_red_contrib_thermoservice</id>
+  <extends>io.github.vitexus.node_red</extends>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <name>Node-RED Contrib ThermoService</name>
+  <summary>Node-RED input node for DS18B20 temperature via ThermoService HTTP endpoint</summary>
+  <description>
+    <p>
+      Polls a DS18B20 temperature sensor through the ThermoService HTTP
+      endpoint and emits the reading as a Node-RED message. Configurable
+      URL and polling interval. Displays live temperature as node status.
+    </p>
+  </description>
+  <categories>
+    <category>Science</category>
+  </categories>
+  <url type="homepage">https://github.com/Vitexus/node-red-contrib-thermoservice</url>
+  <url type="bugtracker">https://github.com/Vitexus/node-red-contrib-thermoservice/issues</url>
+  <url type="vcs-browser">https://github.com/Vitexus/node-red-contrib-thermoservice</url>
+  <developer id="io.github.vitexus">
+    <name>VitexSoftware</name>
+  </developer>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="1.0.0" date="2026-05-15"/>
+  </releases>
+</component>
