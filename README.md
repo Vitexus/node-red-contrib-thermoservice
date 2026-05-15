@@ -102,11 +102,125 @@ and an `"error"` field — the node emits no message and shows a red status.
 
 ## Example flows
 
-### Minimal — debug only
+### Basic example — importovatelný flow
+
+Soubor [`examples/basic-flow.json`](examples/basic-flow.json) obsahuje
+připravený flow, který lze přímo importovat do Node-RED
+(**☰ → Import → vybrat soubor**):
 
 ```
-[thermoservice in] ──► [debug]
+[thermoservice in: DS18B20]
+    ├──► [switch: Senzor OK?]
+    │        ├── OK ──► [template: Formátuj zprávu] ──► [debug: Výstup]
+    │        └── null ──► [debug: Chyba senzoru]
+    └──► [debug: Raw msg] (vypnutý)
 ```
+
+```json
+[
+    {
+        "id": "tab-thermo-example",
+        "type": "tab",
+        "label": "ThermoService příklad",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "ex-in",
+        "type": "thermoservice-in",
+        "z": "tab-thermo-example",
+        "name": "DS18B20",
+        "url": "http://localhost:5000/celsius",
+        "interval": 60,
+        "x": 160,
+        "y": 120,
+        "wires": [["ex-switch-err", "ex-debug-raw"]]
+    },
+    {
+        "id": "ex-switch-err",
+        "type": "switch",
+        "z": "tab-thermo-example",
+        "name": "Senzor OK?",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [{"t": "nnull"}, {"t": "null"}],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 360,
+        "y": 120,
+        "wires": [["ex-tpl-format"], ["ex-debug-err"]]
+    },
+    {
+        "id": "ex-tpl-format",
+        "type": "template",
+        "z": "tab-thermo-example",
+        "name": "Formátuj zprávu",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "Senzor: {{sensor}}  |  ROM: {{rom}}  |  Teplota: {{payload}} °C",
+        "output": "str",
+        "x": 570,
+        "y": 100,
+        "wires": [["ex-debug-out"]]
+    },
+    {
+        "id": "ex-debug-out",
+        "type": "debug",
+        "z": "tab-thermo-example",
+        "name": "Výstup",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 780,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "ex-debug-err",
+        "type": "debug",
+        "z": "tab-thermo-example",
+        "name": "Chyba senzoru",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload.error",
+        "targetType": "msg",
+        "x": 590,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "ex-debug-raw",
+        "type": "debug",
+        "z": "tab-thermo-example",
+        "name": "Raw msg (vypnutý)",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 370,
+        "y": 200,
+        "wires": []
+    }
+]
+```
+
+Výstup v debug panelu po deployi:
+
+```
+Senzor: pi-hostname  |  ROM: 28-0123456789ab  |  Teplota: 21.375 °C
+```
+
+### Rozšířený flow (dashboard + InfluxDB + Teams alert)
 
 Import the ready-made extended flow from
 [`nodered-flow.json`](https://github.com/VitexSoftware/thermoservice/blob/main/nodered-flow.json)
