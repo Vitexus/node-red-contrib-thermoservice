@@ -1,3 +1,14 @@
+node-red-contrib-thermoservice (1.0.0-2) trixie; urgency=medium
+
+  * Install to /usr/share/node-red/node_modules/ so node-red palette loader
+    discovers nodes automatically (was /usr/share/nodejs/ — wrong path).
+  * Remove npm build step: thermoservice.js uses only node:http and node:https
+    (built-in modules), no external runtime deps needed.
+  * Remove nodejs/npm from Build-Depends.
+  * Add postinst/postrm for daemon-reload + try-restart node-red.
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Thu, 19 Jun 2026 20:00:00 +0200
+
 node-red-contrib-thermoservice (1.0.0-1) trixie; urgency=medium
 
   * Initial Debian packaging
